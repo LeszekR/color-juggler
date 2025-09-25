@@ -1,14 +1,36 @@
-# flutter_project_template
-[![flutter_project_template](https://nokycucwgzweensacwfy.supabase.co/functions/v1/get_project_badge?projectId=149)](https://nokycucwgzweensacwfy.supabase.co/functions/v1/get_project_url?projectId=149)
+# Recruitment task: color_juggler
 
-📖 Template for flutter projects using solid_lints, CI for tests and analysis.
+A little app to juggle colors – tap anywhere to change the mood, as many times as you like.  
+You will always see a new color. A simple way to stop overthinking if you need to decompress...
 
-- Uses latest stable flutter
-- Repo name as your project name
-- Organization from your profile email address or default
+---
 
-# Usage
-1. Press "Use this template" on the menu.
-2. Fill Github form with your new repo name and press "Create repository from template"
-3. Wait for it to be created and set up action is complete. In a couple of minutes, you'll see the flutter project created in your repo once Github Actions are complete.
-4. Clone and code.
+### `ColorsViewData.copyWith()`
+
+Could be simplified here but is implemented with the typical null-checking pattern to prepare for
+more fields in the class and keep in line with general convention.
+
+### Private `_generateNextColor()` called from `nextColor()`
+
+Why not inline `_generateNextColor()`?
+
+- Clear layering: `nextColor()` is the public API (what the View calls).
+- `_generateNextColor()` is an implementation detail, easy to test in isolation or replace later.
+- Separates the “endpoint” from the algorithm.
+- Easier to extend later if more generation modes (e.g. pastel colors, dark palette) are needed.
+- Slightly more boilerplate, but it reads cleanly.
+
+### Separate app_runner
+
+For such a tiny app, it could just as well be inlined in `main()`. Yet `run()` in `app_runner.dart`
+creates room for future bootstrapping of common tools:
+
+- Logger
+- Config (.env)
+- Dependency injection (`GetIt`, or other)
+
+### Docs following solid_lints
+
+All public members are documented to comply with solid_lints. Some comments are intentionally
+minimal, since the code is otherwise self-explanatory. Depending on the team policy, some of them
+may be considered redundant.

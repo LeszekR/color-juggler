@@ -9,7 +9,7 @@ class ColorJugglerHome extends StatelessWidget {
   final String title;
 
   /// Creates a [ColorJugglerHome] with the given [title].
-  const ColorJugglerHome({super.key, required this.title});
+  const ColorJugglerHome({required this.title, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class ColorJugglerHome extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
-      body: Center(
+      body: const Center(
         child: ColorView(),
       ),
     );

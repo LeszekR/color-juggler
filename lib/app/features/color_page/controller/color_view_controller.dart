@@ -1,21 +1,27 @@
-import 'dart:math';
-
+import 'package:color_juggler/app/features/color_page/controller/color_utils.dart';
 import 'package:color_juggler/app/features/color_page/model/color_view_data.dart';
-import 'package:color_juggler/app/utils/utils.dart';
+import 'package:color_juggler/app/features/color_page/view/color_view.dart';
 import 'package:flutter/material.dart';
 
 /// Controls the logic for [../view/ColorView].
 ///
 /// Responsible for generating and updating the current color state.
 class ColorViewController {
+
+  /// [ColorView] central text color on light background
+  static const textColorDark = Colors.black;
+
+  /// [ColorView] central text color on dark background
+  static const textColorLight = Colors.white;
+
   /// Random number generator used for color components.
-  final Random random = Random();
+  final ColorUtils colorUtils;
 
   /// Holds the current state of the color view.
   ColorViewData data;
 
   /// Creates a [ColorViewController] with the given [data].
-  ColorViewController(this.data);
+  ColorViewController(this.colorUtils, this.data);
 
   /// Generates a new color and updates [data].
   void nextColor() {
@@ -24,31 +30,25 @@ class ColorViewController {
 
   void _nextColor() {
     // maxIterations prevent the very unlikely, yet possible case of infinite loop or jank if it takes too long
-    const int maxIterations = 1000;
+    const int maxIterations = 10;
 
-    var i = 0;
-    int red;
-    int green;
-    int blue;
     Color backgroundColor;
     Color textColor;
 
+    var i = 0;
     do {
-      red = random.nextInt(256);
-      green = random.nextInt(256);
-      blue = random.nextInt(256);
-      backgroundColor = Color.fromRGBO(red, green, blue, 1.0);
+      backgroundColor = colorUtils.randomColorRGBO();
       i++;
-    } while (Utils.equalRgba(data.backgroundColor, backgroundColor) && i < maxIterations);
+    } while (colorUtils.equalRGB(data.backgroundColor, backgroundColor) && i < maxIterations);
 
     /// If luminance < 0.3 we use white text, otherwise black.
     /// 0.3 is a arbitrarily picked threshold based on trial and error.
     /// Tune if you want a darker/light preference.
-    textColor = backgroundColor.computeLuminance() < 0.3 ? Colors.white : Colors.black;
+    textColor = backgroundColor.computeLuminance() < 0.3 ? textColorLight : textColorDark;
 
     data = data.copyWith(
-        backgroundColor: backgroundColor,
-        textColor: textColor,
+      backgroundColor: backgroundColor,
+      textColor: textColor,
     );
   }
 }

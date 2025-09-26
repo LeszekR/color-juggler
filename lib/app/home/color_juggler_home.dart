@@ -1,3 +1,4 @@
+import 'package:color_juggler/app/features/color_page/controller/color_utils.dart';
 import 'package:color_juggler/app/features/color_page/view/color_view.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class ColorJugglerHome extends StatelessWidget {
         title: Text(title),
       ),
       body: const Center(
-        child: ColorView(),
+        child: ColorView(ColorUtils()),
       ),
     );
   }

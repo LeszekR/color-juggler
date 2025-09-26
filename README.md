@@ -74,3 +74,8 @@ creates room for future bootstrapping of common tools like:
 
 Utility class now only needed by `ColorViewController`. But its static method allows for testing
 `Color` objects by their r,g,b,o values.
+
+### Tests
+
+- Since mocks often are used in many tests I created a dedicated file that sets them for being
+  generated in one place

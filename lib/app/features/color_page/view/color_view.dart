@@ -1,7 +1,10 @@
-import 'package:color_juggler/app/features/color_page/controller/color_service.dart';
-import 'package:color_juggler/app/features/color_page/controller/color_view_controller.dart';
-import 'package:color_juggler/app/features/color_page/model/color_view_data.dart';
+import 'package:color_juggler/app/features/color_page/bloc/color_bloc.dart';
+import 'package:color_juggler/app/features/color_page/bloc/color_event.dart';
+import 'package:color_juggler/app/features/color_page/bloc/color_state.dart';
+import 'package:color_juggler/app/features/color_page/domain/color_service.dart';
+import 'package:color_juggler/bootstrap/get_it_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Main widget that displays the current color and handles interactions.
 class ColorView extends StatefulWidget {
@@ -20,41 +23,30 @@ class ColorView extends StatefulWidget {
 
 /// State class for [ColorView].
 class _ColorViewState extends State<ColorView> {
-  /// Controller that manages the color state.
-  late final ColorViewController controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // This state should be preserved up in the tree - this is an absolutely minimal implementation which will loose
-    // the state on every rebuild. Keeping the state in dedicated object makes it easy to refactor to preserve it.
-    const data = ColorViewData();
-    controller = ColorViewController(widget.colorService, data);
-  }
-
-  void _newColor() {
-    controller.nextColor();
-    setState(() {});
-  }
+  final ColorBloc _bloc = getIt<ColorBloc>();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: _newColor,
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: controller.data.backgroundColor),
-        child: Center(
-          child: Text(
-            ColorView.centralText,
-            style: TextStyle(
-              color: controller.data.textColor,
-              fontSize: (Theme.of(context).textTheme.titleLarge?.fontSize ?? 12) * 2,
+    return BlocConsumer<ColorBloc, ColorState>(
+      listener: (BuildContext context, ColorState state) {},
+      builder: (context, state) {
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => _bloc.add(JuggleColorEvent()),
+          child: DecoratedBox(
+            decoration: BoxDecoration(color: state.backgroundColor),
+            child: Center(
+              child: Text(
+                ColorView.centralText,
+                style: TextStyle(
+                  color: state.textColor,
+                  fontSize: (Theme.of(context).textTheme.titleLarge?.fontSize ?? 12) * 2,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

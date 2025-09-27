@@ -58,15 +58,14 @@ dart run build_runner build --delete-conflicting-outputs
 
 **Architecture**
 
-- I created the app following patterns that easily scale. They may be more than required for this
-  exercise, but they create a scalable foundation. I chose MVC architecture and created the first
-  feature of the app following this pattern.Obviously it is just one of possible patterns, yet the
-  choice seemed practical for the purpose - not overly complicated yet allowing for clear separation
-  of concerns.
-- I separated color-changing logic in the `ColorViewController` not to mix view and domain concerns.
-- I separeted state in lightweight `ColorViewData` data container allowing for future
-  preservation of the app's state at minimal memory expenditure. This can be particularly important
-  in mobile apps with large states to preserve.
+- I created the app following patterns that easily scale. In this branch I used BLoC. Obviously it
+  is just one of possible patterns, yet the choice seemed practical for the purpose - not overly
+  complicated yet allowing for clear separation of concerns.
+- In a real project, I would use `Cubit` here, since it’s lighter and sufficient for this case. For
+  the purpose of the recruitment task I deliberately chose `Bloc` to demonstrate my familiarity with
+  the full event => state mechanism.
+- I introduced `GetIt`. This prepares the app for DI anywhere without the boilerplate of passing
+  dependencies via constructors chain and makes it easy to mock dependencies in tests.
 
 ---
 
@@ -103,6 +102,13 @@ dart run build_runner build --delete-conflicting-outputs
 ---
 
 ## Implementation decisions rationale
+
+### `ColorEvent` extending `Equatable`
+
+Bloc events don’t have to extend Equatable. But in case where `Event` contains some data it becames
+important. Without `Equatable` Dart compares objects by reference by default. So two events with the
+same data are considered different. This can cause redundant state rebuilds or make tests awkward.
+I did it here to demonstrate common practice although for the purpose of this task it is redundant.
 
 ### Docs following `solid_lints`
 

@@ -1,4 +1,5 @@
-import 'package:color_juggler/app/features/color_page/model/color_view_data.dart';
+import 'package:color_juggler/app/common/config.dart';
+import 'package:color_juggler/app/features/color_page/bloc/color_state.dart';
 import 'package:color_juggler/app/features/color_page/view/color_view.dart';
 import 'package:color_juggler/app/home/color_juggler_app.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +25,8 @@ void main() {
     // then
     final homeDecoratedBox = tester.widget<DecoratedBox>(homeBoxFinder);
     final centralText = tester.widget<Text>(centralTextFinder);
-    expect((homeDecoratedBox.decoration as BoxDecoration).color, ColorViewData.startBackgroundColor);
-    expect(centralText.style!.color, ColorViewData.startTextColor);
+    expect((homeDecoratedBox.decoration as BoxDecoration).color, Config.startBackgroundColor);
+    expect(centralText.style!.color, Config.startTextColor);
   });
 
   // Because color change is random, there is a tiny probability that ColorService
@@ -44,7 +45,7 @@ void main() {
 
 Future<bool> testWidgetColorsChange(WidgetTester tester) async {
   DecoratedBox homeDecoratedBox;
-  const initialColor = ColorViewData.startBackgroundColor;
+  const initialColor = Config.startBackgroundColor;
   Color? currentColor;
 
   // DO NOT REMOVE this line

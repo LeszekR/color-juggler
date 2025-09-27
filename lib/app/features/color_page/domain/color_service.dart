@@ -1,11 +1,10 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:color_juggler/app/features/color_page/controller/color_view_controller.dart';
+import 'package:color_juggler/app/features/color_page/bloc/color_bloc.dart';
 
-/// Utils for processing colors for [ColorViewController]
+/// Utils for processing colors for [ColorBloc]
 class ColorService {
-
   /// Creates [ColorService].
   const ColorService();
 

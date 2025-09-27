@@ -1,4 +1,4 @@
-import 'package:color_juggler/app/features/color_page/controller/color_service.dart';
+import 'package:color_juggler/app/features/color_page/domain/color_service.dart';
 import 'package:color_juggler/app/features/color_page/view/color_view.dart';
 import 'package:flutter/material.dart';
 
@@ -15,13 +15,8 @@ class ColorJugglerHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
-      ),
-      body: const Center(
-        child: ColorView(ColorService()),
-      ),
+      appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.inversePrimary, title: Text(title)),
+      body: const Center(child: ColorView(ColorService())),
     );
   }
 }

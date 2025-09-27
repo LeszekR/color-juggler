@@ -1,7 +1,5 @@
-import 'package:color_juggler/app/features/color_page/controller/color_utils.dart';
+import 'package:color_juggler/app/features/color_page/controller/color_service.dart';
 import 'package:mockito/annotations.dart';
 
-// part 'test_mocks.mocks.dart';
-
-@GenerateMocks([ColorUtils])
-main () {}
+@GenerateMocks([ColorService])
+void main () {}

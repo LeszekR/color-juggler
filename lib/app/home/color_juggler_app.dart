@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 ///
 /// Sets up [MaterialApp] with theme and home page.
 class ColorJugglerApp extends StatelessWidget {
+  /// App title shown in [AppBar]
+  static const appTitle = 'Color Juggler - recruitment task';
+
   /// Creates a [ColorJugglerApp].
   const ColorJugglerApp({super.key});
 
@@ -14,7 +17,7 @@ class ColorJugglerApp extends StatelessWidget {
       title: 'Color Juggler',
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
       debugShowCheckedModeBanner: false,
-      home: const ColorJugglerHome(title: 'Color Juggler - recruitment task'),
+      home: const ColorJugglerHome(title: appTitle),
     );
   }
 }

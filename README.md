@@ -18,7 +18,9 @@ flutter pub get
 flutter create --platforms=windows,web .
 ```
 
-5. Now project is ready to run
+5. Delete `test/widget_test.dart` if created automatically.
+
+6. Now project is ready to run
 
 ```
 flutter run -d windows

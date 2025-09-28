@@ -39,12 +39,14 @@ dart run build_runner build --delete-conflicting-outputs
 
 ## Two branches in the repository - versions of implementation
 
-The same functionality is implemented in two separate branches:
+The same functionality is implemented in two separate branches.  
+**IMPORTANT**: after every checking out the other branch `flutter pub get` **must be run
+again**.
 
 1. `master` - vanilla Flutter
 2. `bloc_getit` - self explanatory
 
-Where applicable - the below comments differentiante between the two branches.
+Where applicable - the below comments differentiate between the two branches.
 
 ---
 
@@ -56,7 +58,7 @@ Where applicable - the below comments differentiante between the two branches.
 - The text is located in the middle of the screen.
 - After tapping anywhere on the screen, the background color changes to a randomly generated color.
 - The app picks from 16777216 colors using RGB - all three RGB components are randomly picked from
-  0-255 ranges (256 possible values each) what gives 16777216 combinations with repetition.A
+  0-255 ranges (256 possible values each) what gives 16777216 combinations with repetition.
 
 ### Additional functionality
 
@@ -69,7 +71,7 @@ Where applicable - the below comments differentiante between the two branches.
 
 ### Architecture
 
-The app is created following patterns that easily scale. They were chosen patterns in an attempt to
+The app is created following patterns that easily scale. They patterns were chosen in an attempt to
 not overly complicate the code yet allow for clear separation of concerns and build foundation of
 further scaling of the app.
 
@@ -80,8 +82,7 @@ further scaling of the app.
   concerns.
 - State is abstracted into lightweight `ColorViewData` data container allowing for future
   preservation of the app's state at minimal memory expenditure (see: branch `bloc_getit`). This can
-  be particularly important.
-  in mobile apps with large states to preserve.
+  be particularly important in mobile apps with large states to preserve.
 
 **BRANCH `bloc_getit`**
 
@@ -100,9 +101,8 @@ further scaling of the app.
 
 ### Centralised mocks generation
 
-- The same mocks are often used in many tests. Therefore they have been put in a single, dedicated
-  file.
-- This way they are generated in one place - less boilerplate, DRY, KISS observed.
+The same mocks are often used in multiple tests. Therefore they have been put in a single, dedicated
+file. This way they are generated in one place - less boilerplate, DRY, KISS observed.
 
 ### `testCases` in separate file
 
@@ -120,21 +120,23 @@ further scaling of the app.
   the change 5 times and collects the results. It passes if only one iteration changes the color.
   With 5 iterations the chance of picking the same color every time is negligible (~10^-36), so a
   failure here likely indicates a real issue. The test would be fully deterministic if
-  `ColorService` was mocked, but in this implementation introducing DI here would either require
-  passing it through multiple constructors - a lot of boilerplate to maintain, or to hack it with
-  static setter in `ColorViewController` - ugly intervention in release code. I did not like either
+  `ColorService` was mocked, but in this implementation introducing DI would either require passing
+  it through multiple constructors - a lot of boilerplate to maintain, or to hack it with static
+  setter in `ColorViewController` - ugly intrusion in release code. I did not like either
   approach hence I opted for a workaround which is NOT fully deterministic but for the practical
-  reasons does work. Depending on the team's policy DI might have to be introduced here.
+  reasons does work. Depending on the team's policy such approach could be rejected and DI might
+  have to be introduced instead.
 - The tree must be rebuilt in every iteration. Checking the test correctness by breaking it I got it
-  to fail because of the old tree lingering from previous iteration. Flutter test was reusing it. To
+  to fail because of the old tree lingering from previous iteration- `flutter_test` was reusing it.
+  To
   guarantee the tree is fresh I added a line that achieves just that. I commented it to prevent
-  other devs from removing it.
+  its possible removal by other devs.
 
 **BRANCH: `bloc_getit`**
 
 - Here the test is deterministic.
-- I used `GetIt` to inject `MockColorService` and control colors before and after the tap on the
-  screen.
+- I used `GetIt` to inject `MockColorService` and use full control over the colors before and after
+  the tap on the screen.
 - The test covers all cases of colors change.
 
 ---

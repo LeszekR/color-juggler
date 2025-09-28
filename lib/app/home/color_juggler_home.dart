@@ -9,7 +9,7 @@ class ColorJugglerHome extends StatelessWidget {
   /// Title displayed in the app bar.
   final String title;
 
-  /// Creates a [ColorJugglerHome] with the given [title].
+  /// Creates [ColorJugglerHome] with the given [title].
   const ColorJugglerHome({required this.title, super.key});
 
   @override

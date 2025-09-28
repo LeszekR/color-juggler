@@ -12,7 +12,7 @@ class ColorJugglerApp extends StatelessWidget {
   /// App title shown in [AppBar]
   static const appTitle = 'Color Juggler - recruitment task';
 
-  /// Creates a [ColorJugglerApp].
+  /// Creates the [ColorJugglerApp] widget.
   const ColorJugglerApp({super.key});
 
   @override

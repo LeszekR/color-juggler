@@ -5,7 +5,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:ui' as _i2;
 
-import 'package:color_juggler/app/features/color_page/bloc/color_service.dart'
+import 'package:color_juggler/app/features/color_page/domain/color_service.dart'
     as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 

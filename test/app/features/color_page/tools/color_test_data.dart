@@ -11,23 +11,23 @@ const textLight = ColorBloc.textColorLight;
 const textDark = ColorBloc.textColorDark;
 
 const testCases = [
-  ColorControllerTestCase('dark to light', backgroundDark1, backgroundLight1, textLight, textDark),
-  ColorControllerTestCase('light to dark', backgroundLight1, backgroundDark1, textDark, textLight),
-  ColorControllerTestCase('dark to dark', backgroundDark1, backgroundDark2, textLight, textLight),
-  ColorControllerTestCase('light to light', backgroundLight1, backgroundLight2, textDark, textDark),
+  ColorBlocTestCase('dark to light', backgroundDark1, backgroundLight1, textLight, textDark),
+  ColorBlocTestCase('light to dark', backgroundLight1, backgroundDark1, textDark, textLight),
+  ColorBlocTestCase('dark to dark', backgroundDark1, backgroundDark2, textLight, textLight),
+  ColorBlocTestCase('light to light', backgroundLight1, backgroundLight2, textDark, textDark),
 ];
 
 /// The argument order in _ColorControllerTestCase is chosen for readability:
 /// first the core change (the background),
 /// then - knowing how the background changes - we can reason about the expected text color.
-class ColorControllerTestCase {
+class ColorBlocTestCase {
   final String title;
   final Color backgroundBefore;
   final Color textBefore;
   final Color backgroundAfter;
   final Color textAfter;
 
-  const ColorControllerTestCase(
+  const ColorBlocTestCase(
     this.title,
     this.backgroundBefore,
     this.backgroundAfter,

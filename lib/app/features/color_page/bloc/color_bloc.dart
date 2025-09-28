@@ -21,7 +21,7 @@ class ColorBloc extends Bloc<ColorEvent, ColorState> {
   final ColorService colorService;
 
   /// Creates a [ColorBloc] with the given [state].
-  ColorBloc() : colorService = getIt<ColorService>(), super(getIt<ColorState>()) {
+  ColorBloc(super.initialState) : colorService = getIt<ColorService>() {
     on<JuggleColorEvent>(_nextColor);
   }
 

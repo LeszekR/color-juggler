@@ -1,9 +1,17 @@
 import 'package:color_juggler/app/common/config.dart';
+import 'package:color_juggler/app/features/color_page/bloc/color_bloc.dart';
 import 'package:color_juggler/app/features/color_page/bloc/color_state.dart';
+import 'package:color_juggler/app/features/color_page/domain/color_service.dart';
 import 'package:color_juggler/app/features/color_page/view/color_view.dart';
 import 'package:color_juggler/app/home/color_juggler_app.dart';
+import 'package:color_juggler/bootstrap/get_it_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+
+import '../../../../test_tools/test_mocks.mocks.dart';
+import '../../../../test_tools/test_utils.dart';
+import '../tools/color_test_data.dart';
 
 final appTitleFinder = find.text(ColorJugglerApp.appTitle);
 final appBarFinder = find.ancestor(of: appTitleFinder, matching: find.byType(AppBar));
@@ -12,6 +20,17 @@ final centralTextFinder = find.text(ColorView.centralText);
 final homeBoxFinder = find.ancestor(of: centralTextFinder, matching: find.byType(DecoratedBox));
 
 void main() {
+  late MockColorService mockColorService;
+
+  setUp(() {
+    mockColorService = MockColorService();
+    initGetIt();
+    getItReplaceSingleton<ColorService>(mockColorService);
+  });
+
+  tearDown(() {
+    getIt.reset();
+  });
 
   testWidgets('home page', (tester) async {
     // with
@@ -29,35 +48,45 @@ void main() {
     expect(centralText.style!.color, Config.startTextColor);
   });
 
-  // Because color change is random, there is a tiny probability that ColorService
-  // generates the same color again. With 5 iterations the chance of this happening
-  // in each is ~10^-36, so for practical purposes we can treat it as deterministic.
-  testWidgets('tap changes background color', (tester) async {
-    bool didChangeColor = false;
-
-    for (var i = 0; i < 5; i++) {
-      didChangeColor = await testWidgetColorsChange(tester);
-      if (didChangeColor) break;
+  group('tap changes background and text color', () {
+    for (final testCase in testCases) {
+      testWidgets(testCase.title, (tester) async {
+        await testWidgetColorsChange(tester, mockColorService, testCase);
+      });
     }
-    expect(didChangeColor, isTrue);
   });
 }
 
-Future<bool> testWidgetColorsChange(WidgetTester tester) async {
+Future<void> testWidgetColorsChange(
+  WidgetTester tester,
+  MockColorService mockColorService,
+  ColorBlocTestCase testCase,
+) async {
   DecoratedBox homeDecoratedBox;
-  const initialColor = Config.startBackgroundColor;
-  Color? currentColor;
+  Text centralText;
+  Color? backgroundColor;
+  Color? textColor;
+
+  // with
+  when(mockColorService.randomColorRGBO()).thenReturn(testCase.backgroundAfter);
+  getItReplaceSingleton<ColorBloc>(
+    ColorBloc(ColorState(backgroundColor: testCase.backgroundBefore, textColor: testCase.textBefore)),
+  );
 
   // DO NOT REMOVE this line
   // Important: ensures a fresh widget tree between iterations.
   // Without this, Flutter may reuse the old tree, invalidating the test.
   await tester.pumpWidget(Container());
 
-  // with
   await tester.pumpWidget(const ColorJugglerApp());
+
   homeDecoratedBox = tester.widget<DecoratedBox>(homeBoxFinder);
-  currentColor = (homeDecoratedBox.decoration as BoxDecoration).color;
-  expect(currentColor, initialColor);
+  backgroundColor = (homeDecoratedBox.decoration as BoxDecoration).color;
+  expect(backgroundColor, testCase.backgroundBefore);
+
+  centralText = tester.widget<Text>(centralTextFinder);
+  textColor = centralText.style!.color;
+  expect(textColor, testCase.textBefore);
 
   // when
   await tester.tap(homeBoxFinder);
@@ -65,6 +94,10 @@ Future<bool> testWidgetColorsChange(WidgetTester tester) async {
 
   // then
   homeDecoratedBox = tester.widget<DecoratedBox>(homeBoxFinder);
-  currentColor = (homeDecoratedBox.decoration as BoxDecoration).color;
-  return currentColor != initialColor;
+  backgroundColor = (homeDecoratedBox.decoration as BoxDecoration).color;
+  expect(backgroundColor, testCase.backgroundAfter);
+
+  centralText = tester.widget<Text>(centralTextFinder);
+  textColor = centralText.style!.color;
+  expect(textColor, testCase.textAfter);
 }

@@ -14,7 +14,7 @@ class ColorView extends StatefulWidget {
   /// Creates [ColorService] instance.
   final ColorService colorService;
 
-  /// Creates a [ColorView].
+  /// Creates a [ColorView] - the app home page with its base functionality changing color on tap.
   const ColorView(this.colorService);
 
   @override

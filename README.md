@@ -71,8 +71,8 @@ Where applicable - the below comments differentiate between the two branches.
 
 ### Architecture
 
-The app is created following patterns that easily scale. They patterns were chosen in an attempt to
-not overly complicate the code yet allow for clear separation of concerns and build foundation of
+The app is created following patterns that easily scale. The patterns were chosen in an attempt not
+to overly complicate the code yet allow for clear separation of concerns and build foundation of
 further scaling of the app.
 
 **BRANCH: `master`**

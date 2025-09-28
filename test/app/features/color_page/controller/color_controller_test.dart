@@ -1,5 +1,5 @@
 import 'package:color_juggler/app/features/color_page/controller/color_service.dart';
-import 'package:color_juggler/app/features/color_page/controller/color_view_controller.dart';
+import 'package:color_juggler/app/features/color_page/controller/color_controller.dart';
 import 'package:color_juggler/app/features/color_page/model/color_view_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,7 +42,7 @@ void testColorsChange({
   required Color textAfter,
 }) {
   final ColorViewData data = ColorViewData(backgroundColor: backgroundBefore, textColor: textBefore);
-  final ColorViewController controller = ColorViewController(MockColorService, data);
+  final ColorController controller = ColorController(MockColorService, data);
 
   // with
   when(MockColorService.randomColorRGBO()).thenReturn(backgroundAfter);

@@ -37,9 +37,20 @@ dart run build_runner build --delete-conflicting-outputs
 
 ---
 
+## Two branches in the repository - versions of implementation
+
+The same functionality is implemented in two separate branches:
+
+1. `master` - vanilla Flutter
+2. `bloc_getit` - self explanatory
+
+Where applicable - the below comments differentiante between the two branches.
+
+---
+
 ## Implemented features
 
-**The required functionality**
+### The required functionality
 
 - The application displays the text "Hello there".
 - The text is located in the middle of the screen.
@@ -47,62 +58,104 @@ dart run build_runner build --delete-conflicting-outputs
 - The app picks from 16777216 colors using RGB - all three RGB components are randomly picked from
   0-255 ranges (256 possible values each) what gives 16777216 combinations with repetition.A
 
-**Additional functionality**
+### Additional functionality
 
 - Since the text tends to vanish when the luminance difference is too narrow I implemented change of
   the text color as well - it is toggled between black and white. (I played with inversion of r,g,b
-  first but the results of a simple algorithm were not satisfactory, the text was often lacked
-  sufficient contrast.)
+  first but the results of a simple algorithm were not satisfactory, the text was often not
+  sufficiently contrasted.)
 - Since the default font size of the `Text` widget seemed too small to be fun I increased the font
   size via `Theme.textTheme`, with default to ensure safety if no theme is provided.
 
-**Architecture**
+### Architecture
 
-- I created the app following patterns that easily scale. They may be more than required for this
-  exercise, but they create a scalable foundation. I chose MVC architecture and created the first
-  feature of the app following this pattern.Obviously it is just one of possible patterns, yet the
-  choice seemed practical for the purpose - not overly complicated yet allowing for clear separation
-  of concerns.
-- I separated color-changing logic in the `ColorViewController` not to mix view and domain concerns.
-- I separeted state in lightweight `ColorViewData` data container allowing for future
-  preservation of the app's state at minimal memory expenditure. This can be particularly important
+The app is created following patterns that easily scale. They were chosen patterns in an attempt to
+not overly complicate the code yet allow for clear separation of concerns and build foundation of
+further scaling of the app.
+
+**BRANCH: `master`**
+
+- MVC architecture.
+- Color-changing logic is abstracted into the `ColorViewController` not to mix view and domain
+  concerns.
+- State is abstracted into lightweight `ColorViewData` data container allowing for future
+  preservation of the app's state at minimal memory expenditure (see: branch `bloc_getit`). This can
+  be particularly important.
   in mobile apps with large states to preserve.
+
+**BRANCH `bloc_getit`**
+
+- `Bloc` used for `ColorView` state management.
+- In any real project, `Cubit` would be more suitable here, since it’s lighter and sufficient for
+  this case. For the purpose of the recruitment task I deliberately chose `Bloc` to demonstrate
+  familiarity with the full event => state mechanism.
+- `GetIt` used for dependency injection. This sets frame for the app to use DI anywhere without the
+  boilerplate of passing dependencies via constructors chain.
+- `ColorState` is simply refactored `ColorViewData` from branch `master`.
+- Mocking dependencies via `GetIt` is used in `color_view_test`.
 
 ---
 
 ## Tests
 
-### Mocks
+### Centralised mocks generation
 
-- Since mocks often are used in many tests I created a dedicated file that sets them for being
-  generated in one place
+- The same mocks are often used in many tests. Therefore they have been put in a single, dedicated
+  file.
+- This way they are generated in one place - less boilerplate, DRY, KISS observed.
 
 ### `testCases` in separate file
 
-- Test data are prepared to be reused across many tests.
-- When in separate file they are easier to follow in long files with many tests - toggling files
-  always shows the test data without loosing track of currently read test; put in the same file with
-  tests force scrolling up and down what makes it more difficult to understand what given test does.
+- Test data ready to be reused across many tests.
+- When in separate file they are easier to follow while editing long test files - toggling between
+  the test and data files retains the scroll in both files. Putting them in the same file force
+  scrolling up and down to see what is in the data, making it more difficult to understand what
+  given test does.
 
-### Comments to `color_view_test`
+### `color_view_test`
 
-- The test is not fully deterministic since the color change is random. Hence I run the change 5
-  times and collect the results. Test passes if only one changes the color. With 5 iterations
-  the chance of picking the same color every time is negligible (~10^-36), so a failure here likely
-  indicates a real issue. The test would be fully deterministic if I mocked the `ColorService`, but
-  in this implementation introducing DI here would either require passing it through multiple
-  constructors, which felt disproportionate for this task, or to hack it with static setter in
-  `ColorViewController`. I did not like either approach hence I opted for a workaround which is NOT
-  fully deterministic but for the practical reasons does work. Depending on the team's policy DI
-  might have to be introduced here.
-- The tree should be rebuilt in every iteration. But checking the test correctness by breaking it I
-  got it fail because of the tree lingering from previous iteration being reused by the test
-  framework. So to guarantee the tree is fresh I added a line that achieves just that. I commented
-  it so other devs do not remove it.
+**BRANCH: `master`**
+
+- The test is not deterministic since the color change is random. To work around the problem it runs
+  the change 5 times and collects the results. It passes if only one iteration changes the color.
+  With 5 iterations the chance of picking the same color every time is negligible (~10^-36), so a
+  failure here likely indicates a real issue. The test would be fully deterministic if
+  `ColorService` was mocked, but in this implementation introducing DI here would either require
+  passing it through multiple constructors - a lot of boilerplate to maintain, or to hack it with
+  static setter in `ColorViewController` - ugly intervention in release code. I did not like either
+  approach hence I opted for a workaround which is NOT fully deterministic but for the practical
+  reasons does work. Depending on the team's policy DI might have to be introduced here.
+- The tree must be rebuilt in every iteration. Checking the test correctness by breaking it I got it
+  to fail because of the old tree lingering from previous iteration. Flutter test was reusing it. To
+  guarantee the tree is fresh I added a line that achieves just that. I commented it to prevent
+  other devs from removing it.
+
+**BRANCH: `bloc_getit`**
+
+- Here the test is deterministic.
+- I used `GetIt` to inject `MockColorService` and control colors before and after the tap on the
+  screen.
+- The test covers all cases of colors change.
 
 ---
 
 ## Implementation decisions rationale
+
+### `ColorEvent` extending `Equatable`
+
+**BRANCH: `master`**
+
+Bloc events don’t have to extend `Equatable`. But in case where `Event` contains some data it
+becomes important. Without `Equatable` Dart compares objects by reference by default. So two events
+with the same data are considered different. This can cause redundant state rebuilds or make tests
+awkward. I did it here to demonstrate common practice although for the purpose of this task it is
+redundant.
+
+### `ColorState` extending  `Equatable`
+
+**BRANCH: `bloc_getit`**
+
+Simplifies comparing emitted states in tests. Without it a comparator would have to be implemented.
 
 ### Docs following `solid_lints`
 
@@ -113,18 +166,21 @@ required by the linter.
 
 ### Implementation of `ColorsViewData.copyWith()`
 
-Implemented with the typical null-checking pattern to prepare for more
-fields in the class and keep in line with general convention.
+Implemented with the typical null-checking pattern to prepare for more fields in the class.
 
 ### Private `_nextColor()` called from `nextColor()`
 
+**BRANCH: `master`**
+
 The `_nextColor()` method might as well be inlined. I decided to extract it for:
 
-- separation of the “endpoint” from the algorithm: `nextColor()` is the public API (what the View
-  calls), - `_nextColor()` is an inner implementation detail, easy to refactor
-- slightly more boilerplate, but it reads cleanly.
+- separation of the “endpoint” from the algorithm: `nextColor()` is the public API (called from the
+  view),  `_nextColor()` is inner implementation detail, easy to refactor.
+- Slightly more boilerplate, but it reads cleanly.
 
 ### Separate app_runner
 
-For such a tiny app, it could just as well be inlined in `main()`. Yet `run()` in `app_runner.dart`
-leaves room for bootstrapping common tools (logger, config, DI) if the app grows.
+- For such a tiny app, it could just as well be inlined in `main()`.
+- Yet `run()` in `app_runner.dart` leaves room for bootstrapping common tools (logger, config, DI)
+  if the app grows.
+- It is actually used in branch `bloc_getit` for initiating `GetIt`.

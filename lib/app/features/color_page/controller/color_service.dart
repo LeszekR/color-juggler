@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:color_juggler/app/features/color_page/controller/color_view_controller.dart';
+import 'package:color_juggler/app/features/color_page/controller/color_controller.dart';
 
-/// Utils for processing colors for [ColorViewController]
+/// Utils for processing colors for [ColorController]
 class ColorService {
 
   /// Creates [ColorService].

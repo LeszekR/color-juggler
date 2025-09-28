@@ -1,5 +1,5 @@
 import 'package:color_juggler/app/features/color_page/controller/color_service.dart';
-import 'package:color_juggler/app/features/color_page/controller/color_view_controller.dart';
+import 'package:color_juggler/app/features/color_page/controller/color_controller.dart';
 import 'package:color_juggler/app/features/color_page/model/color_view_data.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class ColorView extends StatefulWidget {
 /// State class for [ColorView].
 class _ColorViewState extends State<ColorView> {
   /// Controller that manages the color state.
-  late final ColorViewController controller;
+  late final ColorController controller;
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _ColorViewState extends State<ColorView> {
     // This state should be preserved up in the tree - this is an absolutely minimal implementation which will loose
     // the state on every rebuild. Keeping the state in dedicated object makes it easy to refactor to preserve it.
     const data = ColorViewData();
-    controller = ColorViewController(widget.colorService, data);
+    controller = ColorController(widget.colorService, data);
   }
 
   void _newColor() {

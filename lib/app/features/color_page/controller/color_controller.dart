@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 /// Controls the logic for [../view/ColorView].
 ///
 /// Responsible for generating and updating the current color state.
-class ColorViewController {
+class ColorController {
 
   /// [ColorView] central text color on light background
   static const textColorDark = Colors.black;
@@ -20,8 +20,8 @@ class ColorViewController {
   /// Holds the current state of the color view.
   ColorViewData data;
 
-  /// Creates a [ColorViewController] with the given [data].
-  ColorViewController(this.colorService, this.data);
+  /// Creates a [ColorController] with the given [data].
+  ColorController(this.colorService, this.data);
 
   /// Generates a new color and updates [data].
   void nextColor() {

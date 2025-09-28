@@ -39,7 +39,9 @@ dart run build_runner build --delete-conflicting-outputs
 
 ## Two branches in the repository - versions of implementation
 
-The same functionality is implemented in two separate branches:
+The same functionality is implemented in two separate branches.  
+**IMPORTANT**: after every checking out the other branch `flutter pub get` **must be run
+again**.
 
 1. `master` - vanilla Flutter
 2. `bloc_getit` - self explanatory

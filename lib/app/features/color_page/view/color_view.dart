@@ -27,8 +27,7 @@ class _ColorViewState extends State<ColorView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ColorBloc, ColorState>(
-      listener: (BuildContext context, ColorState state) {},
+    return BlocBuilder<ColorBloc, ColorState>(
       builder: (context, state) {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,

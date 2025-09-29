@@ -137,7 +137,21 @@ file. This way they are generated in one place - less boilerplate, DRY, KISS obs
 - Here the test is deterministic.
 - I used `GetIt` to inject `MockColorService` and use full control over the colors before and after
   the tap on the screen.
-- The test covers all cases of colors change.
+- The test covers all cases of luminance change.
+
+### `color_controller_test`
+
+**BRANCH: `master`**
+
+- Abstracted logic into `_testColorsChange()` to improve readability of the test.
+- The test covers all cases of luminance change.
+
+### `color_bloc_test`
+
+**BRANCH: `bloc_getit`**
+
+- Used bloc-native `blocTest`
+- The test covers all cases of luminance change.
 
 ---
 

@@ -23,15 +23,14 @@ class ColorView extends StatefulWidget {
 
 /// State class for [ColorView].
 class _ColorViewState extends State<ColorView> {
-  final ColorBloc _bloc = getIt<ColorBloc>();
-
   @override
   Widget build(BuildContext context) {
+    final ColorBloc bloc = context.read<ColorBloc>();
     return BlocBuilder<ColorBloc, ColorState>(
       builder: (context, state) {
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () => _bloc.add(JuggleColorEvent()),
+          onTap: () => bloc.add(JuggleColorEvent()),
           child: DecoratedBox(
             decoration: BoxDecoration(color: state.backgroundColor),
             child: Center(

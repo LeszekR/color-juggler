@@ -5,9 +5,14 @@ environment:
   sdk: ^3.9.2
 description: A new Flutter project.
 dependencies:
+  bloc: ^8.1.2
+  equatable: ^2.0.7
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.1.4
+  get_it: ^8.2.0
 dev_dependencies:
+  bloc_test: ^9.1.7
   build_runner: ^2.7.1
   flutter_lints: ^5.0.0
   flutter_test:

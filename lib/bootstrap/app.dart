@@ -1,4 +1,5 @@
 import 'package:color_juggler/app/home/color_juggler_app.dart';
+import 'package:color_juggler/bootstrap/get_it_model.dart';
 import 'package:flutter/material.dart';
 
 /// Entry point runner for the application.
@@ -11,7 +12,8 @@ Future<void> run() async {
   // here is room for bootstrapping other app elements
   //  - Logger
   //  - Config (.env, etc)
-  //  - DI (GetIt, etc)
+
+  initGetIt();
 
   runApp(const ColorJugglerApp());
 }
